@@ -1,0 +1,61 @@
+% Final deck: Modules 1-5 in order.
+% Build with pdflatex from inside this folder (run it twice for the frame count).
+% Each module's frames live in moduleN/moduleN_frames.tex; its figures are in moduleN/figs/.
+\documentclass[aspectratio=169,10pt]{beamer}
+\usepackage{graphicx,booktabs,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{multimedia}   % needed by Module 4 if the optional video frame is enabled
+
+\graphicspath{{module1/}{module2/}{module3/}{module4/}{module5/}}
+
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\definecolor{deckInk}{HTML}{1F2933}
+\definecolor{deckAccent}{HTML}{7B2D8E}
+\setbeamercolor{frametitle}{fg=deckInk}
+\setbeamercolor{framesubtitle}{fg=deckInk!60}
+\setbeamercolor{structure}{fg=deckAccent}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{framesubtitle}{size=\scriptsize}
+\setbeamertemplate{frametitle}{%
+  \vspace*{4pt}\insertframetitle\par
+  {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\par}
+  \vskip3pt{\color{deckAccent}\hrule height 0.6pt}\vskip-4pt}
+\setbeamertemplate{footline}{\hfill{\scriptsize\color{deckInk!50}\insertframenumber}\hspace*{10pt}\vspace*{6pt}}
+\setbeamersize{text margin left=18pt,text margin right=18pt}
+
+\begin{document}
+
+% ---- Title ----
+\begin{frame}[plain]
+\centering\vspace{10pt}
+{\color{deckInk}\Large\bfseries Physics-Informed Neural Networks for Parameter Estimation\\and Hidden-State Recovery in an SEIRD Epidemic Model\\with Time-Varying Transmission\par}
+\vspace{4pt}
+{\color{deckAccent}\hrule height 0.6pt}
+\vspace{6pt}
+{\color{deckInk!70}\normalsize The 2014 West African Ebola Outbreak (Sierra Leone)\par}
+\vspace{12pt}
+{\small\color{deckInk}
+Vismay Shanbhag \quad Tanishk Tasgaonkar \quad Lakshya Satya\\
+Saatwik Tiwari \quad Nitin Sureshkumar\par}
+\vspace{6pt}
+{\footnotesize\color{deckInk!60}Group Project: Mathematical Modelling \quad\textbullet\quad October 2026\par}
+\end{frame}
+
+% ---- Module 1: motivation, model, published models, phase plane ----
+\input{module1/module1_frames}
+
+% ---- Module 2: R0, stability, final size, sensitivity ----
+\input{module2/module2_frames}
+
+% ---- Module 3: numerical solvers, E1 convergence ----
+\input{module3/module3_frames}
+
+% ---- Module 4: PINN design, loss, synthetic experiments ----
+\input{module4/module4_frames}
+
+% ---- Module 5: real data, rolling forecasts, what the PINN adds ----
+\input{module5/module5_frames}
+
+\end{document}
