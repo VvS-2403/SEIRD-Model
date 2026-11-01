@@ -1,6 +1,6 @@
 % ======================================================================
 % Module 1: motivation, SEIRD model, published models, phase plane
-% Three frames, no title slide: \input this file into the main deck.
+% Four frames, no title slide: \input this file into the main deck.
 %
 % Needs in the main preamble:  \usepackage{graphicx,booktabs,amssymb,tikz}
 %                              \usetikzlibrary{arrows.meta,positioning}
@@ -122,7 +122,7 @@ Our PINN learns $\beta(t)$ from cases and deaths, with no date or shape assumed.
 \end{frame}
 
 % ----------------------------------------------------------------------
-\begin{frame}{Phase plane: the peak and the control threshold}
+\begin{frame}{Phase plane: where the epidemic peaks}
 \framesubtitle{Module 1 \textbullet\ exact formulas, checked against an accurate ODE solver (DOP853)}
 \vspace{-2pt}
 \begin{columns}[T,onlytextwidth]
@@ -140,11 +140,59 @@ Our PINN learns $\beta(t)$ from cases and deaths, with no date or shape assumed.
   \begin{itemize}\setlength{\itemsep}{1pt}
     \item $R_0 = 2$: peak \textbf{15.85\%} at $s = 0.5$ ($i$ alone about 4.8\%)
     \item formula vs.\ ODE: relative error at most $1.3\times10^{-5}$
+    \item right of $s^*$: $e+i$ grows ($R_t > 1$); left of $s^*$: it shrinks ($R_t < 1$)
   \end{itemize}
-  \vspace{2pt}
-  \textbf{\color{mvPINN}Control threshold}
-  \[ p_c = \delta_c = 1 - \frac{1}{R_0} = 50\% \quad (R_0 = 2) \]
 \end{columns}
-\mvTakeaway{\textbf{What it means for control:} without a vaccine, isolation, safe burials and tracing together must cut transmission by \textbf{more than 50\%} to turn the epidemic.
+\mvTakeaway{\textbf{Why it matters:} the peak comes exactly when the susceptible share falls to $1/R_0$, the herd-immunity threshold (next slide).
 These exact formulas are also the checks used for the solvers (Module 3) and the PINN (Module 4).}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\begin{frame}{Herd immunity and the control threshold}
+\framesubtitle{Module 1 \textbullet\ how many must be immune, or how much transmission must be cut, before an outbreak cannot grow}
+\vspace{-6pt}
+\begin{columns}[T,onlytextwidth]
+\column{0.46\textwidth}
+  \centering
+  \begin{tikzpicture}[x=1.6cm, y=2.6cm, font=\scriptsize]
+    % shaded region: enough immunity, outbreak cannot grow
+    \fill[mvSoft] (0,0) -- plot[domain=1:4, samples=60] ({\x-1},{1-1/\x}) -- (3,1) -- (0,1) -- cycle;
+    \draw[->, mvInk!70] (0,0) -- (3.15,0) node[right] {$R_0$};
+    \draw[->, mvInk!70] (0,0) -- (0,1.08) node[above] {$p_c$};
+    \foreach \r in {1,2,3,4} \draw[mvInk!70] ({\r-1},0) -- ({\r-1},-0.03) node[below] {\r};
+    \foreach \p/\l in {0/0\%,0.5/50\%,1/100\%} \draw[mvInk!70] (0,\p) -- (-0.04,\p) node[left] {\l};
+    \draw[very thick, mvPINN, domain=1:4, samples=60] plot ({\x-1},{1-1/\x});
+    \draw[dashed, mvMuted] (1,0) -- (1,0.5) -- (0,0.5);
+    \fill[mvPINN] (1,0.5) circle (1.6pt);
+    \node[mvInk, anchor=north west, align=left] at (1.04,0.47) {our $R_0 = 2$:\\$p_c = 50\%$};
+    \node[mvPINN, align=center] at (0.95,0.86) {enough immune:\\outbreak cannot grow};
+    \node[mvMuted, align=center] at (2.4,0.12) {too few immune:\\outbreak can grow};
+  \end{tikzpicture}\\[4pt]
+  \scriptsize\setlength{\tabcolsep}{6pt}
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    $R_0$ & 1.5 & 2 & 3 & 4 \\
+    \midrule
+    $p_c = 1 - 1/R_0$ & 33\% & \textbf{50\%} & 67\% & 75\% \\
+    \bottomrule
+  \end{tabular}
+\column{0.51\textwidth}
+  \footnotesize\raggedright
+  \textbf{\color{mvPINN}Where it comes from}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item one case infects $R_t = R_0\, s$ people (only susceptible contacts count), so growth stops once $s < 1/R_0$: the immune share must exceed $p_c = 1 - 1/R_0$
+    \item same threshold as Module 2: a disease-free state is stable only if $R_0 s^* < 1$
+  \end{itemize}
+  \textbf{\color{mvPINN}Two ways to reach it}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{immunity}, by vaccination or past infection; there was no licensed Ebola vaccine in 2014--15
+    \item \textbf{cutting transmission} by $\delta$: $R_t = (1-\delta) R_0\, s < 1$ when $\delta > \delta_c = 1 - 1/R_0$ (50\% for $R_0 = 2$)
+  \end{itemize}
+  \textbf{\color{mvPINN}Two subtleties}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{overshoot:} reaching $p_c$ only marks the \emph{peak}; those still infectious keep infecting, so with $R_0 = 2$ about 80\% are infected in the end, not 50\%
+    \item \textbf{timing:} later on less is needed, $1 - 1/R_t$: 37.5\% at $s = 0.8$
+  \end{itemize}
+\end{columns}
+\mvTakeaway{\textbf{What it means for control:} without a vaccine, isolation, safe burials and tracing together must cut transmission by \textbf{more than 50\%} at the start, and the earlier they act, the smaller the epidemic.}
 \end{frame}
